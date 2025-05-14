@@ -1,20 +1,19 @@
-## 🎨 Artcenter Nabi 미술관 리뉴얼 웹사이트
+## 🌻🌟 Vincent Van Gogh 정보를 담은 반응형 웹사이트
 
-아트센터 나비 미술관의 분위기와 정체성을 살려 리뉴얼한 반응형 웹사이트입니다. <br>
-jQuery 기반의 DOM 제어로 사용자 상호작용을 구현하였고,  <br>
-Swiper.js를 이용한 슬라이더와 다양한 해상도 대응을 고려한 구조로 제작하였습니다. <br>
-갤러리와 콘텐츠 중심의 디자인을 반영하였습니다.
+Vincent Van Gogh의 작품을 소개하는 웹사이트로, 미술관 분위기에 맞는 디자인과 사용자 경험을 제공합니다. <br>
+웹사이트는 반응형 디자인을 적용하여 다양한 해상도와 기기 환경에 최적화되어 있으며, <br>
+사용자 상호작용을 JavaScript로 구현하였습니다. <br>
+GSAP 애니메이션을 사용하여 슬라이더, 메뉴, 콘텐츠 등의 동적인 요소들을 부드럽게 처리합니다.
 
 <br/>
 
 ### 🎯 주요 기능
 
-- 해상도에 따라 메뉴 구조 및 스타일 자동 변경
-- 모바일 환경에서의 햄버거 메뉴 및 dim 처리
-- Swiper.js 기반 메인 슬라이더
-- 슬라이더 자동 재생, 컨트롤러 클릭 이동 기능
-- 720px 이하에서 상품 슬라이드형 배치 적용 (Swiper)
-- 메뉴 hover 시 서브메뉴 활성화
+- 해상도에 따른 자동 메뉴 구조 변경
+- 스크롤에 따른 메뉴 자동 활성화
+- 스크롤시 GSAP 사용으로 등장 애니메이션
+- 탭 클릭시 부드러운 스크롤 이동 애니메이션
+- 상단으로 이동 버튼
 
 <br/>
 
@@ -22,10 +21,10 @@ Swiper.js를 이용한 슬라이더와 다양한 해상도 대응을 고려한 �
 
 | 기술 | 설명 |
 |------|------|
-| ![HTML](https://img.shields.io/badge/HTML5-F05032?logo=html5&logoColor=white&style=flat-square) | 웹 표준을 준수한 마크업 구조 |
-| ![CSS](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white&style=flat-square) | 반응형 미디어쿼리 및 전반적 스타일링 |
-| ![jQuery](https://img.shields.io/badge/jQuery-0769AD?logo=jquery&logoColor=white&style=flat-square) | 메뉴 동작, 슬라이더 전환, 반응형 이벤트 구현 |
-| ![Swiper](https://img.shields.io/badge/Swiper-6332F6?logo=swiper&logoColor=white&style=flat-square) | 슬라이더 기능 구현 및 반응형 구성 |
+| ![HTML](https://img.shields.io/badge/HTML5-F05032?logo=html5&logoColor=white&style=flat-square) | HTML5 마크업 구조 |
+| ![CSS](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white&style=flat-square) | CSS3 반응형 스타일 처리 |
+| ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000&style=flat-square) | JavaScript DOM 제어, GSAP 연동 |
+| ![GSAP](https://img.shields.io/badge/GSAP-88CE02?logo=greensock&logoColor=white&style=flat-square) | GSAP 부드러운 애니메이션 |
 
 <br/>
 
@@ -41,194 +40,250 @@ Swiper.js를 이용한 슬라이더와 다양한 해상도 대응을 고려한 �
 
 ### ⚙️ 기능 상세 설명
 
-### ✅  1. 반응형 구분 및 초기 해상도 체크
+### ✅  1. 반응형 디자인 처리 (Mobile/Desktop 구분):
 
-- 브라우저 초기 로딩 시, 화면 너비 기준으로 모바일 여부를 판단합니다.
-- isMobile은 이후 여러 조건의 기준이 됩니다.
+- 화면 크기에 따라 mobile과 desktop으로 구분하고, 각 기기 환경에 맞는 스타일을 적용합니다.
 
  ``` JavaScript
-let isMobile = window.innerWidth <= 580;
+let isMobile;
 
-$(window).resize(function () {
-    if (window.innerWidth > 580) {
-        // 데스크탑 화면일 때
-        if (isMobile !== false) {
-            isMobile = false;
-        }
-        // 모바일 메뉴 닫기
-        $(".dim").removeClass("active");
-        $("header nav").removeClass("active");
-        $("header .menu").removeClass("active");
-        document.body.style.overflow = "auto";
+function resizeTest() {
+    if(window.innerWidth > 720){
+        if(isMobile != "desktop") isMobile = "desktop";
     } else {
-        // 모바일 화면일 때
-        if (isMobile !== true) {
-            isMobile = true;
-        }
+        if(isMobile != "mobile") isMobile = "mobile";
+    }
+};
+
+resizeTest(); // 처음에 값을 가집니다.
+
+window.addEventListener("resize", function(){
+    resizeTest();
+    if(window.innerWidth > 720){
+        tab.classList.remove("active");
+        mobile.classList.remove("active");
+        dim.classList.remove("active");
     }
 });
-$(window).trigger("resize");
 ```
 
 ---
 
-### ✅ 2. 메인 슬라이더 컨트롤 기능 (#slider)
+### ✅ 2. 섹션 메뉴 제어
+
+-  메뉴 항목을 클릭하면 해당 섹션으로 부드럽게 스크롤 이동하며, 메뉴의 활성화/비활성화를 제어합니다.
 
 <img src="images/ss2.jpg"  alt="메인 슬라이더">
 
-📌 슬라이더 초기값
 ```javascript
-let idx = 0;            // 현재 보여줄 슬라이드 인덱스
-let targetx = 0;        // 이동할 위치값
-let sliderw = 2000;     // 슬라이드 한 장의 너비 (px 기준)
-```
-
-📌 슬라이드 전환 함수
-```javascript
-    function galleryfn() {
-        $("#slider .controller li").removeClass("on");
-        $("#slider .controller li").eq(idx).addClass("on");
-
-        targetx = -1 * sliderw * idx;
-
-        $("#slider .image ul li").removeClass("active");
-        $("#slider .image ul li").eq(idx).addClass("active");
-    }
-
-    $("#slider .controller ul li").eq(idx).addClass("on");
-    $("#slider .image ul li").eq(idx).addClass("active");
-
-    $("#slider .controller li").click(function (e) {
-        e.preventDefault();
-        idx = $(this).index();
-        galleryfn();
+function controlMenu(n) {
+    gnbList.forEach(function(item, i) {
+        if(i == n) {
+            gnbList[i].classList.add("active");
+        } else {
+            gnbList[i].classList.remove("active");
+        }
     });
-}
-```
 
-📌 컨트롤러 클릭 이벤트
-```javascript
-$("#slider .controller li").click(function (e) {
-    e.preventDefault();
-    idx = $(this).index(); // 클릭한 인덱스
-    galleryfn();
+    if(n != 0) { // header 구간이 아닐 때
+        menuArea.classList.add("fixed");
+        btnTop.classList.add("active");
+    } else {
+        menuArea.classList.remove("fixed");
+        btnTop.classList.remove("active");
+    }
+}
+
+gnbList.forEach(function(item, i) {
+    gnbList[i].addEventListener("click", function(e) {
+        e.preventDefault();
+        topPos = pageList[i].offsetTop;
+        gsap.to(window, { scrollTo: topPos, duration: 0.4 });
+    });
+
+    mobileGnbList[i].addEventListener("click", function(e) {
+        e.preventDefault();
+        topPos = pageList[i].offsetTop;
+        gsap.to(window, { 
+            scrollTo: topPos, 
+            duration: 0.4, 
+            onComplete: function() {
+                tab.classList.remove("active");
+                mobile.classList.remove("active");
+                dim.classList.remove("active");
+            }
+        });
+    });
 });
 ```
 
-📌 초기 슬라이드 세팅
-```javascript
-$("#slider .controller ul li").eq(idx).addClass("on");
-$("#slider .image ul li").eq(idx).addClass("active");
-```
-
-📌 자동 슬라이드 (3초 간격)
-```javascript
-let slideInterval = setInterval(function () {
-    idx = (idx + 1) % 4; // 슬라이드 총 4개 기준
-    galleryfn();
-}, 3000);
-```
-
 ---
 
-### ✅  3. Swiper 슬라이드 (Part1 영역)
+### ✅  3. 스크롤 트리거 (ScrollTrigger 사용)
+
+- 페이지 섹션에 스크롤이 도달하면 애니메이션을 실행하도록 설정합니다.
 
 <img src="images/ss3_1.jpg" alt="part1">
-<img src="images/ss3_2.jpg" width="200px" alt="part1">
 
-📌 슬라이더 인스턴스 정의
 ```javascript
-let swiper = null;
-```
-
-📌 화면 너비에 따른 슬라이드 생성/제거 함수
-```javascript
-function updateSwiper() {
-    if (window.innerWidth < 720) {
-        // 모바일: swiper 슬라이더 생성
-        if (!swiper) {
-            swiper = new Swiper(".mySwiper", {
-                slidesPerView: 2,    // 한 번에 보일 슬라이드 수
-                spaceBetween: 0,     // 슬라이드 간 여백
-                loop: true,          // 무한 반복
-                pagination: {
-                    el: ".swiper-pagination",
-                    clickable: true,
-                },
-                autoplay: {
-                    delay: 3000,
-                    disableOnInteraction: false,
-                },
-            });
+pageList.forEach(function(item, i) {
+    gsap.timeline({
+        scrollTrigger: {
+            trigger: item,
+            start: "top center",
+            end: "bottom center",
+            onEnter: function() {
+                controlMenu(i);
+            },
+            onEnterBack: function() {
+                controlMenu(i);
+            }
         }
-    } else {
-        // 데스크탑: swiper 제거
-        if (swiper) {
-            swiper.destroy();
-            swiper = null;
-        }
-    }
-}
-```
-
-📌 적용 시점
-```javascript
-$(document).ready(updateSwiper);
-$(window).resize(updateSwiper);
+    });
+});
 ```
 
 ---
 
-### ✅  4. 모바일 헤더 메뉴 토글
+### ✅  4. 상단으로 이동하는 버튼
 
-- 메뉴 버튼 클릭 시 nav, menu, dim에 .active 클래스 토글됩니다.
-- 메뉴 열릴 때는 body 스크롤 잠금, 닫히면 스크롤 허용합니다.
+- 스크롤이 내려가면 버튼이 나타나고, 클릭 시 페이지 상단으로 부드럽게 스크롤 이동합니다.
 
 <img src="images/ss4.jpg" alt="모바일 헤더 메뉴 토글">
 
 ```javascript
-$("header .menu").click(function (e) {
+btnTop.addEventListener("click", function(e) {
     e.preventDefault();
-    if (isMobile) {
-        let isActive = $("header nav").hasClass("active");
-        $(".dim, header nav, header .menu").toggleClass("active", !isActive);
-        document.body.style.overflow = isActive ? "auto" : "hidden";
+    gsap.to(window, { scrollTo: 0, duration: 0.4 });
+});
+```
+
+---
+
+### ✅  5. GSAP 애니메이션 (각 섹션별 애니메이션)
+
+-  각 섹션에 대해 GSAP 애니메이션을 적용하여, 페이지가 스크롤될 때마다 섹션 요소들이 애니메이션 효과를 적용받도록 합니다.
+
+<img src="images/ss5.jpg" alt="모바일 메뉴 - 2depth 토글">
+
+📌헤더 애니메이션
+
+```javascript
+const startTl = gsap.timeline();
+
+startTl.from(".text_zone p", {
+    y: 30,
+    opacity: 0,
+    duration: 0.6
+});
+startTl.from(".text_zone h2", {
+    y: 30,
+    opacity: 0,
+    duration: 0.6
+});
+startTl.from(".text_zone .more", {
+    y: 30,
+    opacity: 0,
+    duration: 0.6
+});
+```
+
+📌웹사이트  섹션 애니메이션
+
+```javascript
+const businessTl = gsap.timeline({
+    scrollTrigger: {
+        trigger: "#business",
+        start: "top center",
+        end: "bottom center"
+    }
+});
+
+let businessList = document.querySelectorAll("#business li");
+
+businessList.forEach(function(item, i) {
+    if (i % 2 == 0) { // 짝수
+        businessTl.from(item, { y: 100, opacity: 0, duration: 0.3 });
+    } else { // 홀수
+        businessTl.from(item, { y: -100, opacity: 0, duration: 0.3 });
     }
 });
 ```
 
----
-
-### ✅  5. 모바일 메뉴 > 서브 메뉴 토글
-
-- 상위 메뉴 클릭 시 .active 토글됩니다.
-- 다른 메뉴는 자동으로 닫힙니다.
-
-<img src="images/ss5.jpg" alt="모바일 메뉴 - 2depth 토글">
+📌플라워 섹션 애니메이션
 
 ```javascript
-$("header nav > ul > li").click(function (e) {
-    e.preventDefault();
-    $(this).toggleClass("active").siblings().removeClass("active");
+const portfolioTl = gsap.timeline({
+    scrollTrigger: {
+        trigger: "#portfolio",
+        start: "top center",
+        end: "bottom center",
+    }
 });
+
+let portfolioList = document.querySelectorAll("#portfolio li");
+
+portfolioList.forEach(function(item, i) {
+    portfolioTl.from(item, { y: 100, opacity: 0, duration: 0.2 });
+});
+```
+
+📌분야별 소개 섹션 애니메이션
+
+```javascript
+const serviceTl = gsap.timeline({
+    scrollTrigger: {
+        trigger: "#service",
+        start: "top center",
+        end: "bottom center",
+    }
+});
+
+let serviceList = document.querySelectorAll("#service li");
+
+serviceList.forEach(function(item, i) {
+    if (i % 2 == 0) { // 짝수
+        serviceTl.from(item, { x: 100, opacity: 0, duration: 1.2, ease: "power2.out" });
+    } else { // 홀수
+        serviceTl.from(item, { x: -100, opacity: 0, duration: 1.2, ease: "power2.out" });
+    }
+});
+```
+
+📌연락처 섹션 애니메이션
+
+```javascript
+const contactTl = gsap.timeline({
+    scrollTrigger: {
+        trigger: "#contact",
+        start: "top center",
+        end: "bottom center",
+    }
+});
+
+contactTl.from("#name", { y: 30, opacity: 0, duration: 0.4 });
+contactTl.from("#email", { y: 30, opacity: 0, duration: 0.4 });
+contactTl.from("#subject", { y: 30, opacity: 0, duration: 0.4 });
+contactTl.from(".text_wrap", { y: 30, opacity: 0, duration: 0.4 });
+contactTl.from(".submit", { y: 30, opacity: 0, duration: 0.4 });
 ```
 
 ---
 
-### ✅  6. 데스크탑 전용 hover 효과
+### ✅  6. 배경색 변화 (스크롤 시)
 
-- 마우스 호버 시 .active 클래스 부여합니다.
-- 모바일에서는 비활성화됩니다.
+- 스크롤 시 사용자가 눈치채지 못하지만 사용감을 개선될 수 있게, 배경색이 약간 변화합니다.
 
 <img src="images/ss6.jpg" alt="데스크탑 hover">
 
 ```javascript
-$("header nav > ul > li, header nav > ul > li .sub li, #part1 .swiper-wrapper .swiper-slide a, #part3 .lab a").hover(
-    function () {
-        if (!isMobile) $(this).addClass("active");
-    },
-    function () {
-        if (!isMobile) $(this).removeClass("active");
+gsap.to("body", {
+    backgroundColor: "#0C0F1C",
+    scrollTrigger: {
+        trigger: "#targetSection",
+        start: "top center",
+        end: "bottom center",
+        scrub: true
     }
-);
+});
 ```
