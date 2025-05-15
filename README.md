@@ -290,7 +290,7 @@ gsap.to("body", {
 
 ### ✅  7. 탭 버튼으로 모바일 메뉴 열기/닫기
 
-<img src="images/ss1_3.jpg" alt="GSAP 애니메이션">
+<img src="images/ss1_3.jpg" alt="모바일 탭 토글">
 
 - 스크롤 시 사용자가 눈치채지 못하지만 사용감을 개선될 수 있게, 배경색이 약간 변화합니다.
 
