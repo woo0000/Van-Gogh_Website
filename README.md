@@ -30,9 +30,9 @@ GSAP 애니메이션을 사용하여 슬라이더, 메뉴, 콘텐츠 등의 동�
 
 ### 📸 데모 이미지
 
-| 메인 슬라이더 | 모바일 메뉴(1depth) | 모바일 메뉴(2depth) |
+| 메인 슬라이더 | 모바일 반응형 UI | 모바일 메뉴 |
 |-------------|----------------|-------------|
-| ![](images/ss2.jpg) | ![](images/ss4.jpg) | ![](images/ss5.jpg) |
+| ![](images/ss1_1.jpg) | ![](images/ss1_2.jpg) | ![](images/ss1_3.jpg) |
 
 
 
@@ -73,7 +73,7 @@ window.addEventListener("resize", function(){
 
 -  메뉴 항목을 클릭하면 해당 섹션으로 부드럽게 스크롤 이동하며, 메뉴의 활성화/비활성화를 제어합니다.
 
-<img src="images/ss2.jpg"  alt="메인 슬라이더">
+<img src="images/ss2.jpg"  alt="섹션 메뉴 제어">
 
 ```javascript
 function controlMenu(n) {
@@ -149,7 +149,7 @@ pageList.forEach(function(item, i) {
 
 - 스크롤이 내려가면 버튼이 나타나고, 클릭 시 페이지 상단으로 부드럽게 스크롤 이동합니다.
 
-<img src="images/ss4.jpg" alt="모바일 헤더 메뉴 토글">
+<img src="images/ss4.jpg" alt="상단 이동 버튼">
 
 ```javascript
 btnTop.addEventListener("click", function(e) {
@@ -160,13 +160,13 @@ btnTop.addEventListener("click", function(e) {
 
 ---
 
-### ✅  5. GSAP 애니메이션 (각 섹션별 애니메이션)
+### ✅  5. GSAP 애니메이션 (각 섹션별로)
 
 -  각 섹션에 대해 GSAP 애니메이션을 적용하여, 페이지가 스크롤될 때마다 섹션 요소들이 애니메이션 효과를 적용받도록 합니다.
 
-<img src="images/ss5.jpg" alt="모바일 메뉴 - 2depth 토글">
+<img src="images/ss5.jpg" alt="GSAP 애니메이션">
 
-📌헤더 애니메이션
+📌메인 애니메이션
 
 ```javascript
 const startTl = gsap.timeline();
@@ -188,7 +188,7 @@ startTl.from(".text_zone .more", {
 });
 ```
 
-📌웹사이트  섹션 애니메이션
+📌웹사이트 섹션 애니메이션
 
 ```javascript
 const businessTl = gsap.timeline({
@@ -274,8 +274,6 @@ contactTl.from(".submit", { y: 30, opacity: 0, duration: 0.4 });
 
 - 스크롤 시 사용자가 눈치채지 못하지만 사용감을 개선될 수 있게, 배경색이 약간 변화합니다.
 
-<img src="images/ss6.jpg" alt="데스크탑 hover">
-
 ```javascript
 gsap.to("body", {
     backgroundColor: "#0C0F1C",
@@ -285,5 +283,21 @@ gsap.to("body", {
         end: "bottom center",
         scrub: true
     }
+});
+```
+
+---
+
+### ✅  7. 탭 버튼으로 모바일 메뉴 열기/닫기
+
+<img src="images/ss1_3.jpg" alt="GSAP 애니메이션">
+
+- 스크롤 시 사용자가 눈치채지 못하지만 사용감을 개선될 수 있게, 배경색이 약간 변화합니다.
+
+```javascript
+tab.addEventListener("click", function(e) {
+    tab.classList.toggle("active");
+    mobile.classList.toggle("active");
+    dim.classList.toggle("active");
 });
 ```
